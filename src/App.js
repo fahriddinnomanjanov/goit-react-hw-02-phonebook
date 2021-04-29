@@ -22,10 +22,26 @@ class App extends Component {
       name,
       number,
     }
-    this.setState(prevState => ({
+    
+    const { contacts } = this.state;
+    const result = contacts.find(({name, number}) => name.toLowerCase(), number === name.toLowerCase(), number)
+
+    if (result) {
+      alert(`${name}: is already in contact, ${number}: is already in contact  `)
+      return {
+        contacts
+      } 
+    }else {
+        this.setState(prevState => ({
       contacts: [contact, ...prevState.contacts]
-    }));
+      }));
+      }
+    // else {
+    //   return contacts
+    // }
+      
   }
+
   handleDelete = (idx) => {
     this.setState(prevState => {
       const newContacts = [...prevState.contacts];
@@ -56,6 +72,19 @@ class App extends Component {
         )
       return filteredContacts
     }
+  
+  componentDidMount() {
+    const contacts = localStorage.getItem("contacts");
+    const parseContacts = JSON.parse(contacts);
+    this.setState({ contacts: parseContacts });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { contacts } = this.state;
+    if (contacts !== prevState.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(contacts))
+    }
+  }
 
   render() {
     const { handleDelete, getContacts ,handleFilter } = this;
