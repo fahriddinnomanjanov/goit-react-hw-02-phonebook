@@ -44,24 +44,6 @@ class App extends Component {
       this.setState({filter: e.currentTarget.value})
     }
   
-    getContacts = () => {
-      const { filter, contacts } = this.state;
-      if (!filter) {
-        return contacts
-      }
-      const normalizedFilter = filter.toLowerCase()
-      const filteredContacts = contacts.filter(({ name }) => {
-        if (name.toLowerCase().includes(normalizedFilter)) {
-          return true
-        }
-        else {
-          return false
-        }
-      }
-        )
-      return filteredContacts
-    }
-  
   componentDidMount() {
     const contacts = localStorage.getItem("contacts");
     const parseContacts = JSON.parse(contacts);
@@ -76,9 +58,13 @@ class App extends Component {
   }
 
   render() {
-    const { handleDelete, getContacts ,handleFilter } = this;
-    const { filter } = this.state
-    const contacts = getContacts();
+    const { handleDelete ,handleFilter } = this;
+    const { contacts, filter } = this.state
+
+    const FILTER = filter.toLowerCase()
+
+    const filteredContacts = contacts.filter(({ name, number }) => name.toLowerCase().includes(FILTER) || number.includes(FILTER))
+
     return (
       <>
         <FormAddContact onSubmit={this.addToContacts} />
@@ -87,7 +73,7 @@ class App extends Component {
           onChange={handleFilter}
         />
         <ContactList
-          list={contacts}
+          list={filteredContacts}
           onDelete={handleDelete}
         />
     </>
