@@ -24,22 +24,11 @@ class App extends Component {
     }
     
     const { contacts } = this.state;
-    const result = contacts.find(({name, number}) => name.toLowerCase(), number === name.toLowerCase(), number)
+    const result = contacts.find((contact) => contact.name.toLowerCase() === name)
 
-    if (result) {
-      alert(`${name}: is already in contact, ${number}: is already in contact  `)
-      return {
-        contacts
-      } 
-    }else {
-        this.setState(prevState => ({
+    result ? alert(`${name} is already in contact`) : this.setState(prevState => ({
       contacts: [contact, ...prevState.contacts]
       }));
-      }
-    // else {
-    //   return contacts
-    // }
-      
   }
 
   handleDelete = (idx) => {
